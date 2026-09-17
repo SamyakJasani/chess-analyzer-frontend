@@ -1,0 +1,8 @@
+<form class="search" (ngSubmit)="submit()">
+  <label for="username">Player username</label>
+  <div class="search-box">
+    <span aria-hidden="true">@</span>
+    <input id="username" name="username" [(ngModel)]="username" placeholder="e.g. Hikaru" autocomplete="off" />
+    <button type="submit">Inspect</button>
+  </div>
+</form>

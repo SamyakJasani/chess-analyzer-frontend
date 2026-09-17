@@ -1,0 +1,87 @@
+@if (game(); as selected) {
+  <div class="analysis-header">
+    <div>
+      <span class="eyebrow">Game analysis</span>
+      <h2>{{ playerName(selected.white) }} vs {{ playerName(selected.black) }}</h2>
+    </div>
+    <div class="analysis-meta">
+      <span>{{ gameDate(selected) }}</span>
+      <span>{{ selected.time_class ?? selected.time_control ?? 'Time class unavailable' }}</span>
+      <a [href]="selected.url" target="_blank" rel="noopener">View game ↗</a>
+    </div>
+  </div>
+
+  @if (analysisError()) {
+    <div class="notice error">{{ analysisError() }}</div>
+  } @else {
+    <div class="analysis-grid">
+      <div class="board-wrap">
+        <div class="board-actions">
+          <span class="panel-label">Position</span>
+          <button class="flip-button" (click)="toggleBoard()" [attr.aria-pressed]="flipped()" aria-label="Flip board">Flip board</button>
+        </div>
+        <div class="player-clocks">
+          <div><span class="clock-label">White</span><strong>{{ whiteClock() }}</strong></div>
+          <div><span class="clock-label">Black</span><strong>{{ blackClock() }}</strong></div>
+        </div>
+        <div class="board-stage">
+          <div class="evaluation-rail" aria-label="Position evaluation">
+            <span class="evaluation-label">{{ evaluationLabel() }}</span>
+            <span class="evaluation-side">B</span>
+            <div class="evaluation-rail-track">
+              <div class="evaluation-black"></div>
+              <div class="evaluation-white-rail" [style.height]="evaluationPosition()"></div>
+              <div class="evaluation-center-rail"></div>
+            </div>
+            <span class="evaluation-side">W</span>
+          </div>
+          <div class="board" aria-label="Chess board">
+            @for (rank of displayRanks(); track rank) {
+              @for (file of displayFiles(); track file) {
+                <div class="square" [class.light]="(rank + file.charCodeAt(0)) % 2 === 0">
+                  <span class="coordinate">{{ file === displayFiles()[0] ? rank : rank === displayRanks()[displayRanks().length - 1] ? file : '' }}</span>
+                  @if (board()[file + rank]; as piece) {
+                    <span class="piece" [class.black-piece]="piece.color === 'b'">{{ pieceSymbol(piece.type, piece.color) }}</span>
+                  }
+                </div>
+              }
+            }
+          </div>
+        </div>
+        <div class="move-controls">
+          <button (click)="goToPly(0)" [disabled]="currentPly() === 0" aria-label="First move">|‹</button>
+          <button (click)="goToPly(currentPly() - 1)" [disabled]="currentPly() === 0" aria-label="Previous move">‹</button>
+          <span>{{ currentPly() }} / {{ totalPlies() }}</span>
+          <button (click)="goToPly(currentPly() + 1)" [disabled]="currentPly() === totalPlies()" aria-label="Next move">›</button>
+          <button (click)="goToPly(totalPlies())" [disabled]="currentPly() === totalPlies()" aria-label="Last move">›|</button>
+        </div>
+      </div>
+
+      <div class="move-panel">
+        <div class="panel-label">Notation</div>
+        <div class="moves">
+          @for (row of moves(); track row.number) {
+            <div class="move-row">
+              <span>{{ row.number }}.</span>
+              <button [class.current]="currentPly() === row.number * 2 - 1" (click)="goToPly(row.number * 2 - 1)">{{ row.white?.san }}</button>
+              <button [class.current]="currentPly() === row.number * 2" (click)="goToPly(row.number * 2)">{{ row.black?.san ?? '...' }}</button>
+            </div>
+          }
+        </div>
+        <div class="engine-status">
+          <span class="status-dot" [class.ready]="engineStatus() === 'ready'"></span>
+          <span>{{ engineStatus() === 'loading' ? 'Loading Stockfish...' : engineStatus() === 'ready' ? 'Stockfish ready' : engineStatus() === 'error' ? 'Engine unavailable' : 'Engine idle' }}</span>
+          <strong>{{ evaluationLabel() }}</strong>
+          <small>{{ engineLine() || 'Select a move to begin evaluation.' }}</small>
+        </div>
+      </div>
+    </div>
+  }
+} @else {
+  <div class="analysis-empty">
+    <div class="knight">♞</div>
+    <span class="eyebrow">Analysis desk</span>
+    <h2>Select a game<br /><em>to study.</em></h2>
+    <p>Choose a game from the archive to begin.</p>
+  </div>
+}

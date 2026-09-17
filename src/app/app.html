@@ -1,0 +1,11 @@
+<main class="app-shell">
+  <header class="topbar">
+    <div><p class="eyebrow">Chess.com archive explorer</p><h1>Read the game<br /><em>between the moves.</em></h1></div>
+    <app-player-search (searched)="search($event)" />
+  </header>
+  @if (error()) { <section class="notice error" role="alert">{{ error() }}</section> }
+  <div class="workspace">
+    <app-player-sidebar [profile]="profile()" [games]="games()" [gamesLoading]="gamesLoading()" [selectedGame]="selectedGame()" (gameSelected)="selectedGame.set($event)" />
+    <section class="analysis-panel" aria-live="polite"><app-game-analysis [game]="selectedGame()" /></section>
+  </div>
+</main>
