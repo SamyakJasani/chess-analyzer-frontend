@@ -56,6 +56,9 @@ h2 { font-size: 18px; line-height: 1.25; font-weight: 700; }
 .game-summary strong { font-size: 11px; }
 .game-summary span { margin-top: 3px; color: var(--gray); font-size: 10px; }
 .game-result { color: var(--green-dark); }
+.pagination { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--gray); font-size: 9px; }
+.pagination button { border: 1px solid var(--line); padding: 6px 8px; background: var(--white); color: var(--ink); font-size: 9px; }
+.pagination button:hover:not(:disabled) { border-color: var(--green-dark); color: var(--green-dark); }
 .muted { color: var(--gray); font-size: 11px; line-height: 1.6; }
 
 .analysis-panel { min-width: 0; padding: 32px clamp(20px, 5vw, 64px); background: var(--soft); }

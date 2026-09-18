@@ -1,5 +1,5 @@
 import { Component, EventEmitter, input, Output } from '@angular/core';
-import { ChessGame, PlayerProfile } from '../../../api/api-client';
+import { ChessGame, GamesResponse, PlayerProfile } from '../../../api/api-client';
 
 @Component({
   selector: 'app-player-sidebar',
@@ -10,7 +10,9 @@ export class PlayerSidebar {
   readonly games = input<ChessGame[]>([]);
   readonly gamesLoading = input(false);
   readonly selectedGame = input<ChessGame | null>(null);
+  readonly pagination = input<GamesResponse['pagination'] | null>(null);
   @Output() gameSelected = new EventEmitter<ChessGame>();
+  @Output() pageChanged = new EventEmitter<number>();
 
   protected playerName(player: ChessGame['white'] | ChessGame['black'] | undefined, fallback = 'Unknown player'): string {
     return player?.username ?? fallback;

@@ -158,6 +158,7 @@ export interface components {
             archive: string | null;
             /** Games */
             games: components["schemas"]["Game"][];
+            pagination: components["schemas"]["Pagination"];
             /** Username */
             username: string;
         } & {
@@ -167,6 +168,23 @@ export interface components {
         HealthResponse: {
             /** Status */
             status: string;
+        };
+        /** Pagination */
+        Pagination: {
+            /** Has Next */
+            has_next: boolean;
+            /** Has Previous */
+            has_previous: boolean;
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            /** Total Games */
+            total_games: number;
+            /** Total Pages */
+            total_pages: number;
+        } & {
+            [key: string]: unknown;
         };
         /** UserProfile */
         UserProfile: {
@@ -252,8 +270,21 @@ export interface components {
                 "application/json": components["schemas"]["ErrorResponse"];
             };
         };
+        /** @description The page or page_size query parameter is invalid. */
+        InvalidPagination: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["ErrorResponse"];
+            };
+        };
     };
     parameters: {
+        /** @description One-based page number. */
+        Page: number;
+        /** @description Number of games per page. Maximum 100. */
+        PageSize: number;
         /** @description Chess.com username. */
         Username: string;
     };
@@ -309,7 +340,12 @@ export interface operations {
     };
     getGames: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description One-based page number. */
+                page?: components["parameters"]["Page"];
+                /** @description Number of games per page. Maximum 100. */
+                page_size?: components["parameters"]["PageSize"];
+            };
             header?: never;
             path: {
                 /** @description Chess.com username. */
@@ -328,6 +364,7 @@ export interface operations {
                     "application/json": components["schemas"]["GamesResponse"];
                 };
             };
+            400: components["responses"]["InvalidPagination"];
             502: components["responses"]["ExternalAPIError"];
         };
     };

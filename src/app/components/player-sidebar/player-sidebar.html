@@ -13,9 +13,10 @@
     <section class="empty-intro"><span class="eyebrow">Start here</span><h2>Choose a player to surface their latest archive.</h2><p>Search a Chess.com username above. Their profile and games will appear here.</p></section>
   }
   <section class="games-panel">
-    <div class="section-heading"><div><span class="eyebrow">Latest archive</span><h2>Games</h2></div><span class="count">{{ games().length }}</span></div>
+    <div class="section-heading"><div><span class="eyebrow">Latest archive</span><h2>Games</h2></div><span class="count">{{ pagination()?.total_games ?? games().length }}</span></div>
     @if (gamesLoading()) { <p class="muted">Fetching the latest games...</p> }
     @else if (profile() && games().length === 0) { <p class="muted">No games were returned for this player.</p> }
     @else { <div class="game-list">@for (game of games(); track gameKey(game); let index = $index) { <button class="game-row" [class.active]="selectedGame() === game" (click)="gameSelected.emit(game)"><span class="game-index">{{ (index + 1).toString().padStart(2, '0') }}</span><span class="game-summary"><strong>{{ playerName(game.white) }}</strong><span>vs {{ playerName(game.black) }}</span></span><span class="game-result">{{ resultForPlayer(game) }}</span></button> } @empty { <p class="muted">Your loaded games will appear here.</p> }</div> }
+    @if (pagination(); as pages) { <div class="pagination"><button type="button" [disabled]="!pages.has_previous || gamesLoading()" (click)="pageChanged.emit(pages.page - 1)">Previous</button><span>Page {{ pages.page }} of {{ pages.total_pages }}</span><button type="button" [disabled]="!pages.has_next || gamesLoading()" (click)="pageChanged.emit(pages.page + 1)">Next</button></div> }
   </section>
 </aside>

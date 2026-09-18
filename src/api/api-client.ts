@@ -18,7 +18,7 @@ export function getPlayerProfile(username: string, signal: AbortSignal): Promise
   return request<PlayerProfile>(`/users/${encodeURIComponent(username)}`, signal);
 }
 
-export async function getPlayerGames(username: string, signal: AbortSignal): Promise<ChessGame[]> {
-  const response = await request<GamesResponse>(`/users/${encodeURIComponent(username)}/games`, signal);
-  return response.games;
+export async function getPlayerGames(username: string, page: number, signal: AbortSignal, pageSize = 20): Promise<GamesResponse> {
+  const params = new URLSearchParams({ page: String(page), page_size: String(pageSize) });
+  return request<GamesResponse>(`/users/${encodeURIComponent(username)}/games?${params}`, signal);
 }
