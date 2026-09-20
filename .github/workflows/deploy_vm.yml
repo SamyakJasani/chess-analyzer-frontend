@@ -32,7 +32,7 @@ jobs:
 
       # Build Angular
       - name: Build Angular
-        run: npx ng build --configuration development
+        run: npx ng build --configuration vm
 
       # Backup current frontend
       - name: Backup current frontend
