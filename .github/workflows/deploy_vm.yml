@@ -63,6 +63,7 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           source: "dist/chess-analyzer-frontend/browser/*"
           target: "/var/www/html/chess"
+          strip_components: 3
           rm: true
 
       - name: Deployment completed
